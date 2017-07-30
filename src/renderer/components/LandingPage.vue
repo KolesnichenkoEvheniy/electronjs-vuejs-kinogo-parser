@@ -20,11 +20,14 @@
           <label>Год</label>
           <input type="text" class="form-control" v-model="minYear">
 
-          <label>Минимальный ректинг</label>
+          <label>Минимальный рейтинг</label>
           <input type="text" class="form-control" v-model="minRating">
 
           <label>Пройти страниц</label>
           <input type="text" class="form-control" v-model="maxPages">
+
+          <label>Одновременных потоков</label>
+          <input type="text" class="form-control" v-model="flows">
           
         </div>
 
@@ -75,6 +78,7 @@
         URL: 'http://kinogo.club/prikljuchenija/',
         maxPages: 30,
         minRating: 4.3,
+        flows: 80,
         results: [],
         loading: false
       }
@@ -87,7 +91,7 @@
 
       start() {
           this.loading = true;
-          let parser = new Parser(this.URL, this.minRating, this.minYear, this.maxPages);
+          let parser = new Parser(this.URL, this.minRating, this.minYear, this.maxPages, this.flows);
           parser.parse();
       }
     },
@@ -98,6 +102,10 @@
         // console.log(res);
         this.results = res;
         this.loading = false;
+
+        let myNotification = new Notification('Готово', {
+          body: 'Найдено '+this.results.length+' результатов!'
+        });
       });
     }
   }

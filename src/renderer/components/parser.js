@@ -18,11 +18,12 @@ const resolve = require('url').resolve;
 
 export default class Parser
 {
-    constructor(URL = 'http://kinogo.club/prikljuchenija/', minRating = 2, minYear = 2004, maxPages = 80) {
+    constructor(URL = 'http://kinogo.club/prikljuchenija/', minRating = 2, minYear = 2004, maxPages = 80, flows = 80) {
         this.URL = URL;
         this.minYear = minYear;
         this.maxPages = maxPages;
         this.minRating = minRating;
+        this.flows = flows;
     }
 
     parse() {
@@ -63,13 +64,11 @@ export default class Parser
 
                 callback();
             });
-        }, 100);
+        }, this.flows);
 
         q.drain = function(){
-            // console.log('Найдено '+ results.length +' результатов');
             // fs.writeFileSync('./data.json', JSON.stringify(results, null, 4));
             Event.$emit('finish', results);
-            // console.log(results);
         }
 
         q.push(that.URL);
