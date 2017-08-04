@@ -55,7 +55,10 @@ export default class Parser
 
 
                 
-                $('.bot-navigation>a').last().each(function() {
+                $('.bot-navigation>a').last().each(function(index, element) {
+                    if ($(element).text() !== 'Позже') {
+                        return false;
+                    }
                     if (page < that.maxPages) {
                         q.push(resolve(that.URL, $(this).attr('href')));
                     }
@@ -74,5 +77,30 @@ export default class Parser
         q.push(that.URL);
     }
 
-    
+    getCategories() {
+        let categories = [];
+        let that = this;
+        let q = tress((url, callback) => {
+            needle.get(url, (err, res) => {
+                if (err) throw err;
+
+                var $ = cheerio.load(res.body);
+
+                $('.leftblok_contener2 > .leftblok1 > .miniblock > .mini > a').each((i, elem) => {
+                    categories.push({
+                        title: $(elem).text(),
+                        href: $(elem).attr('href')
+                    })
+                });
+
+                callback();
+            });
+        }, this.flows);
+
+        q.drain = () => {
+            Event.$emit('finishCats', categories);
+        }
+
+        q.push(that.URL);
+    }
 }

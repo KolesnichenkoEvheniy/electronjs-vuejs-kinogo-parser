@@ -1,9 +1,14 @@
 <template>
   <div id="wrapper">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300" rel="stylesheet">
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue"> -->
-    <h1>Мега парсер фильмов</h1>
-    <h3 v-if="results.length">Найдено {{ results.length }} фильмов</h3>
+    <h1 class="light">Мега парсер фильмов</h1>
+    <h3 v-if="results.length"><p class="text-info light">
+      Найдено <i>{{ results.length }} фильмов</i> в категории <i>{{ category }}</i>,
+      от <i>{{ minYear }} года</i> и с минимальным рейтингом <i>{{ minRating }}</i>
+    </p></h3>
     <main>
       <!-- <div class="left-side">
         <span class="title">
@@ -14,8 +19,11 @@
       
       <div v-if="!results.length">
         <div class="form-group">
-          <label>URL</label>
-          <input type="text" class="form-control" v-model="URL">
+          <label>Категория</label>
+          <select v-model="URL" class="form-control">
+            <option :value="`http://kinogo.club${category.href}`" v-for="category in categories"
+            >{{ category.title }}</option>
+          </select>
 
           <label>Год</label>
           <input type="text" class="form-control" v-model="minYear">
@@ -42,7 +50,12 @@
         <table class="table table-bordered">
           <thead>
             <th>Заголовок</th>
-            <th>Рейтинг</th>
+            <th @click="sortRate" class="pointer">Рейтинг <i :class="{
+                  'fa': true, 
+                  'fa-sort-asc': asc && asc !== null,
+                  'fa-sort-desc': ! asc && asc !== null
+                }" 
+              aria-hidden="true"></i></th>
             <th>Ссылка</th>
           </thead>
 
@@ -57,7 +70,7 @@
       </div>
 
       <p v-if="results.length" class="text-center">
-        <button class="btn btn-danger" @click="results=[]">Очистить талицу</button>
+        <button class="btn btn-danger" @click="clearTable()">Очистить таблицу</button>
       </p>
      
     </main>
@@ -75,12 +88,22 @@
     data () {
       return {
         minYear: 2004,
-        URL: 'http://kinogo.club/prikljuchenija/',
-        maxPages: 30,
+        URL: 'http://kinogo.club',
+        maxPages: 80,
         minRating: 4.3,
         flows: 80,
         results: [],
-        loading: false
+        categories: [],
+        loading: false,
+        asc: null
+      }
+    },
+
+    computed: {
+      category() {
+        return this.categories.filter((object) => {
+          return `http://kinogo.club${object.href}` == this.URL;
+        })[0].title;
       }
     },
 
@@ -93,20 +116,40 @@
           this.loading = true;
           let parser = new Parser(this.URL, this.minRating, this.minYear, this.maxPages, this.flows);
           parser.parse();
+      },
+      sortRate() {
+        this.asc = this.asc === null ? false : !this.asc;
+        if (! this.asc) {
+          this.results.sort((a, b) => +(+a.rate < +b.rate) || +(+a.rate === +b.rate) - 1);
+          return;
+        }
+        this.results.sort((a, b) => +(+b.rate < +a.rate) || +(+a.rate === +b.rate) - 1);
+      },
+      clearTable() {
+        this.results = [];
+        this.asc = null;
       }
     },
 
     created() {
       Event.$on('finish', (res) => {
-        // alert('finish');
-        // console.log(res);
         this.results = res;
         this.loading = false;
+
+        this.sortRate();
 
         let myNotification = new Notification('Готово', {
           body: 'Найдено '+this.results.length+' результатов!'
         });
       });
+    },
+    mounted() {
+      let parser = new Parser('http://kinogo.club/');
+      parser.getCategories();
+      Event.$on('finishCats', (res) => {
+        this.categories = res;
+        this.URL = `http://kinogo.club${res[0].href}`;
+      })
     }
   }
 </script>
@@ -118,6 +161,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   .results-table {
@@ -196,5 +240,23 @@
   .doc button.alt {
     color: #42b983;
     background-color: transparent;
+  }
+
+  .pointer:hover {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .light {
+    font-weight: 300;
+  }
+
+  table th {
+    padding: 0 0 0 8px;
+  }
+
+  .btn {
+    border-radius: 0 !important;
+    transition: all ease 0.3s;
   }
 </style>
