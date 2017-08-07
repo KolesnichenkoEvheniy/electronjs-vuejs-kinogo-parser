@@ -3,8 +3,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300" rel="stylesheet">
-    <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue"> -->
-    <h1 class="light">Мега парсер фильмов</h1>
+
+    <h1 class="light mega-font">Мега парсер фильмов</h1>
     <h3 v-if="results.length"><p class="text-info light">
       Найдено <i>{{ results.length }} фильмов</i> в категории <i>{{ category }}</i>,
       от <i>{{ minYear }} года</i> и с минимальным рейтингом <i>{{ minRating }}</i>
@@ -151,6 +151,13 @@
 </script>
 
 <style>
+  @font-face {
+      font-family: 'amsdam_cyr-latregular';
+      src: url('~@/assets/fonts/10200-webfont.woff2') format('woff2'),
+           url('~@/assets/fonts/10200-webfont.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+  }
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
   * {
@@ -158,6 +165,10 @@
     margin: 0;
     padding: 0;
     font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  h1.mega-font {
+    font-family: 'amsdam_cyr-latregular', sans-serif;
   }
 
   .results-table {

@@ -6,7 +6,7 @@
       <div class="cat__tail"></div>
       <div class="cat__head"></div>
     </div>
-    <h1>Сейчас мы ищем Вам фильмы...</h1>
+    <h1 class="mega-font">Сейчас мы ищем Вам фильмы...</h1>
   </div>
 </template>
 
