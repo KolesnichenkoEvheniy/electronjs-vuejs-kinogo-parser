@@ -10,12 +10,7 @@
       от <i>{{ minYear }} года</i> и с минимальным рейтингом <i>{{ minRating }}</i>
     </p></h3>
     <main>
-      <!-- <div class="left-side">
-        <span class="title">
-          Welcome to your new project!
-        </span>
-        <system-information></system-information>
-      </div> -->
+      <loader v-if="loading"></loader>
       
       <div v-if="!results.length">
         <div class="form-group">
@@ -80,10 +75,11 @@
 <script>
   import SystemInformation from './LandingPage/SystemInformation'
   import Parser from './parser'
+  import Loader from './Loader'
 
   export default {
     name: 'landing-page',
-    components: { SystemInformation },
+    components: { Loader },
 
     data () {
       return {
