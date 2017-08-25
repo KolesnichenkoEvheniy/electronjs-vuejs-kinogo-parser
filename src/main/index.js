@@ -9,6 +9,10 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
+updater.init({
+  autoDownload: false
+});
+
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
@@ -52,8 +56,6 @@ function createWindow () {
     ];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-
-    updater.init('http://http://sdm.ua/parser/updates.json');
 }
 
 app.on('ready', createWindow)
