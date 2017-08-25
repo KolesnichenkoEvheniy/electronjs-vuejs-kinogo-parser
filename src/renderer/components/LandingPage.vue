@@ -4,7 +4,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300" rel="stylesheet">
 
-    <h1 class="light mega-font">Мега парсер фильмов</h1>
+    <h1 class="light mega-font">Мега парсер фильмов <small v-if="bookmarks.length">{{ bookmarks.length }} закладок</small></h1>
     <h3 v-if="results.length"><p class="text-info light">
       Найдено <i>{{ results.length }} фильмов</i> в категории <i>{{ category }}</i>,
       от <i>{{ minYear }} года</i> и с минимальным рейтингом <i>{{ minRating }}</i>
@@ -29,8 +29,8 @@
           <label>Пройти страниц</label>
           <input type="text" class="form-control" v-model="maxPages">
 
-          <label>Одновременных потоков</label>
-          <input type="text" class="form-control" v-model="flows">
+          <!-- <label>Одновременных потоков</label>
+          <input type="text" class="form-control" v-model="flows"> -->
           
         </div>
 
@@ -52,6 +52,7 @@
                 }" 
               aria-hidden="true"></i></th>
             <th>Ссылка</th>
+            <th class="text-center">+</th>
           </thead>
 
           <tbody>
@@ -59,6 +60,7 @@
               <td>{{ film.title }}</td>
               <td>{{ film.rate }}</td>
               <td><a href="#" @click.prevent="open(film.href)">Ссылка</a></td>
+              <td class="text-center"><button class="btn btn-success" @click="addToBookmarks(film)">+</button></td>
             </tr>
           </tbody>
         </table>
@@ -67,6 +69,11 @@
       <p v-if="results.length" class="text-center">
         <button class="btn btn-danger" @click="clearTable()">Очистить таблицу</button>
       </p>
+
+
+      <ul>
+        <li v-for="film in bookmarks"><a href="#" @click.prevent="open(film.href)">{{ film.title }}</a><button class="btn btn-sm btn-warning" @click="removeBookmark(film)">-</button></li>
+      </ul>
      
     </main>
   </div>
@@ -76,6 +83,7 @@
   import SystemInformation from './LandingPage/SystemInformation'
   import Parser from './parser'
   import Loader from './Loader'
+  import { notify } from './helpers'
 
   export default {
     name: 'landing-page',
@@ -91,7 +99,8 @@
         results: [],
         categories: [],
         loading: false,
-        asc: null
+        asc: null,
+        bookmarks: []
       }
     },
 
@@ -113,6 +122,7 @@
           let parser = new Parser(this.URL, this.minRating, this.minYear, this.maxPages, this.flows);
           parser.parse();
       },
+
       sortRate() {
         this.asc = this.asc === null ? false : !this.asc;
         if (! this.asc) {
@@ -121,13 +131,41 @@
         }
         this.results.sort((a, b) => +(+b.rate < +a.rate) || +(+a.rate === +b.rate) - 1);
       },
+
       clearTable() {
         this.results = [];
         this.asc = null;
+      },
+
+      addToBookmarks(film) {
+        this.$db.insert(film, (err, newFilm) => {
+          notify('Добавлено', 'Добавлено в закладки');
+          this.updateBookmarks();
+        });
+      },
+
+      updateBookmarks() {
+        this.$db.find({}, (err, bookmarks) => this.bookmarks = bookmarks );
+      },
+
+      removeAll() {
+        this.$db.remove({ }, {}, (err, numRemoved) => {
+          notify('Удалено', `Удалено ${numRemoved} записи!`);
+          this.updateBookmarks();
+        });
+      },
+
+      removeBookmark(film) {
+        this.$db.remove({ _id: film._id }, {}, (err, numRemoved) => {
+          notify('Удалено', `Закладка удалена!`);
+          this.updateBookmarks();
+        });
       }
     },
 
     created() {
+      this.updateBookmarks();
+      
       Event.$on('finish', (res) => {
         this.results = res;
         this.loading = false;

@@ -15,10 +15,14 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": ""
+    "postinstall": "",
+    "publish": "publish publisher.json -p build"
+  },
+  "updater": {
+    "url": "http://sdm.ua/parser/updates.json"
   },
   "build": {
-    "productName": "Парсер фильмов",
+    "productName": "kinogo-parser",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
@@ -46,21 +50,24 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": "portable"
+      "target": "squirrel"
     },
     "linux": {
       "icon": "build/icons"
     }
   },
   "dependencies": {
-    "vue": "^2.3.3",
     "axios": "^0.16.1",
+    "cheerio": "^0.20.0",
+    "electron-simple-publisher": "^0.4.7",
+    "electron-simple-updater": "^1.2.1",
+    "nedb": "^1.8.0",
+    "needle": "^1.0.0",
+    "tress": "^1.0.0",
+    "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
-    "vuex": "^2.3.1",
-    "cheerio": "^0.20.0",
-    "needle": "^1.0.0",
-    "tress": "^1.0.0"
+    "vuex": "^2.3.1"
   },
   "devDependencies": {
     "babel-core": "^6.22.1",
@@ -78,9 +85,9 @@
     "del": "^2.2.1",
     "devtron": "^1.1.0",
     "electron": "^1.7.2",
+    "electron-builder": "^19.10.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
-    "electron-builder": "^19.10.0",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.11.1",
     "html-webpack-plugin": "^2.16.1",

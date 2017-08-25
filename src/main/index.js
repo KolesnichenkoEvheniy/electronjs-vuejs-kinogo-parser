@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu } from 'electron'
+import updater from 'electron-simple-updater'
 
 /**
  * Set `__static` path to static files in production
@@ -12,6 +13,7 @@ let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
+
 
 function createWindow () {
   /**
@@ -50,6 +52,8 @@ function createWindow () {
     ];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
+    updater.init('http://http://sdm.ua/parser/updates.json');
 }
 
 app.on('ready', createWindow)
