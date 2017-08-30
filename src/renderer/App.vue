@@ -11,5 +11,5 @@
 </script>
 
 <style>
-  /* CSS */
+  /* CSS will be here */
 </style>
