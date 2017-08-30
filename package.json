@@ -1,6 +1,6 @@
 {
   "name": "kinogo-parser",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Evgeniy <evgeniy.web@ukr.net>",
   "description": "An electron-vue project",
   "license": null,
@@ -22,7 +22,7 @@
     "url": "http://sdm.ua/parser/updates.json"
   },
   "build": {
-    "productName": "kinogo-parser",
+    "productName": "Парсер фильмов",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
@@ -50,7 +50,7 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": "squirrel"
+      "target": "portable"
     },
     "linux": {
       "icon": "build/icons"
