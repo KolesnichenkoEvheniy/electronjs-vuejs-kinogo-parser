@@ -6,13 +6,29 @@
       <div class="cat__tail"></div>
       <div class="cat__head"></div>
     </div>
-    <h1 class="mega-font">Сейчас мы ищем Вам фильмы...</h1>
+    <el-progress :percentage="percentage"
+                 :status="status"
+    ></el-progress>
   </div>
 </template>
 
 <script>
   export default {
-
+    props: [
+    	'currentPage',
+        'totalPages'
+    ],
+    computed: {
+      percentage() {
+      	return 100 * +this.currentPage / +this.totalPages;
+      },
+      status() {
+        if (this.percentage > 85.5) {
+            return 'success';
+      	}
+        return 'primary';
+      }
+    }
   }
 </script>
 

@@ -1,24 +1,12 @@
-
-// -----------------------------------
-
-
 const tress = require('tress');
 const needle = require('needle');
 const cheerio = require('cheerio');
 const resolve = require('url').resolve;
-// var fs = require('fs');
-
-
-
-
-
-// console.log("\n\n----------------------------------\nПарсинг...");
-// console.log(`Рейтинг не меньше...${minRating}, год не раньше ${minYear}. Максимум ${maxPages} страниц`);\
-
 
 export default class Parser
 {
-    constructor(URL = 'http://kinogo.club/prikljuchenija/', minRating = 2, minYear = 2004, maxPages = 80, flows = 80) {
+    constructor(vue, URL = `${this.vue.$config('url')}/prikljuchenija/`, minRating = 2, minYear = 2004, maxPages = 80, flows = 80) {
+        this.vue = vue;
         this.URL = URL;
         this.minYear = minYear;
         this.maxPages = maxPages;
@@ -30,11 +18,11 @@ export default class Parser
         let results = [];
         let that = this;
         let page = 1;
-        var q = tress(function(url, callback){
+        let q = tress(function(url, callback){
             needle.get(url, function(err, res){
                 if (err) throw err;
 
-                var $ = cheerio.load(res.body);
+                let $ = cheerio.load(res.body);
 
                 $('.shortstory').each(function(i, elem) {
                     if( 
@@ -47,14 +35,13 @@ export default class Parser
                         results.push({
                             title: $(this).find('h2 a').text(),
                             href: $(this).find('h2 a').attr('href'),
-                            rate: $(this).find('.current-rating').text()
+                            rate: $(this).find('.current-rating').text(),
+                            image: $(this).find('.shortimg div img').attr('src')
                         });
                     }
 
                 });
 
-
-                
                 $('.bot-navigation>a').last().each(function(index, element) {
                     if ($(element).text() !== 'Позже') {
                         return false;
@@ -63,6 +50,7 @@ export default class Parser
                         q.push(resolve(that.URL, $(this).attr('href')));
                     }
                     page++;
+					Event.$emit('pageChanged', page);
                 });
 
                 callback();
@@ -70,9 +58,8 @@ export default class Parser
         }, this.flows);
 
         q.drain = function(){
-            // fs.writeFileSync('./data.json', JSON.stringify(results, null, 4));
             Event.$emit('finish', results);
-        }
+        };
 
         q.push(that.URL);
     }
@@ -84,7 +71,7 @@ export default class Parser
             needle.get(url, (err, res) => {
                 if (err) throw err;
 
-                var $ = cheerio.load(res.body);
+                let $ = cheerio.load(res.body);
 
                 $('.leftblok_contener2 > .leftblok1 > .miniblock > .mini > a').each((i, elem) => {
                     categories.push({
@@ -97,9 +84,7 @@ export default class Parser
             });
         }, this.flows);
 
-        q.drain = () => {
-            Event.$emit('finishCats', categories);
-        }
+        q.drain = () => Event.$emit('finishCats', categories);
 
         q.push(that.URL);
     }

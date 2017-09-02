@@ -10,6 +10,6 @@
   }
 </script>
 
-<style>
-  /* CSS will be here */
+<style lang="scss">
+  @import "./sass/main.scss";
 </style>
