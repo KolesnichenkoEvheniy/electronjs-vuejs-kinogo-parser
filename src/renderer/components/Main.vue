@@ -8,53 +8,75 @@
 		<link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,600,700,900" rel="stylesheet">
 
 		<main>
-			<loader
-				:total-pages="maxPages"
-				:current-page="page"
-				v-if="loading"
-			></loader>
-			<div class="light h1 mega-font">Film <span>Finder</span></div>
-			<div v-if="!results.length && !loading">
-				<el-form ref="form">
-					<div class="form-div" :style="{
-						'height': ! isForm ? '0' : '317px'
-					}">
-						<el-form-item>
-							<el-select v-model="URL" placeholder="Категория">
-								<el-option
-									v-for="category in categories"
-									:key="category.href"
-									:label="category.title"
-									:value="`http://kinogo.club${category.href}`">
-								</el-option>
-							</el-select>
-						</el-form-item>
+			<transition name="fade">
+				<loader
+					:total-pages="maxPages"
+					:current-page="page"
+					v-show="loading"
+				></loader>
+			</transition>
 
-						<label>From year</label>
-						<el-form-item>
-							<el-input v-model="minYear" placeholder="2000"></el-input>
-						</el-form-item>
-
-						<label>Min rate</label>
-						<el-form-item>
-							<el-input v-model="minRating"></el-input>
-						</el-form-item>
-
-						<label>Passings pages</label>
-						<el-form-item>
-							<el-slider v-model="maxPages" :show-tooltip="true" :format-tooltip="tooltip"></el-slider>
-						</el-form-item>
-					</div>
-
-					<el-button type="primary" @click="start" size="large" v-if="!loading">{{ button }}</el-button>
-				</el-form>
-
+			<div :class="{
+					'light h1 mega-font': true,
+					'fidden': results.length
+				}">
+				<el-button type="primary" v-if="results.length" class="prev-button" icon="arrow-left"
+						   @mouseover.native="textBack = true"
+						   @mouseleave.native="textBack = false"
+						   @click.native="clearTable()"
+				>
+					<span>Previous Page</span>
+				</el-button>
+				Film <span class="sub-logo">Finder</span>
 			</div>
+			<transition name="fade">
+				<div v-if="!results.length && !loading">
+					<el-form ref="form">
+						<div class="form-div" :style="{
+							'height': ! isForm ? '0' : '317px'
+						}">
+							<el-form-item>
+								<el-select v-model="URL" placeholder="Категория">
+									<el-option
+										v-for="category in categories"
+										:key="category.href"
+										:label="category.title"
+										:value="`http://kinogo.club${category.href}`">
+									</el-option>
+								</el-select>
+							</el-form-item>
 
-			<results
-				:results="results"
-				:url="$config('url')"
-			></results>
+							<label>From year</label>
+							<el-form-item>
+								<el-input v-model="minYear" placeholder="2000"></el-input>
+							</el-form-item>
+
+							<label>Min rate</label>
+							<el-form-item>
+								<el-input v-model="minRating"></el-input>
+							</el-form-item>
+
+							<label>Passings pages</label>
+							<el-form-item>
+								<el-slider v-model="maxPages" :show-tooltip="true" :format-tooltip="tooltip"></el-slider>
+							</el-form-item>
+						</div>
+
+						<el-button type="primary" @click="start" size="large" v-if="!loading"
+								   :loading="! buttonLoading && ! categories.length"
+						>{{ button }}</el-button>
+					</el-form>
+
+				</div>
+			</transition>
+
+			<transition name="fade">
+				<results
+					v-if="results.length"
+					:results="results"
+					:url="$config('url')"
+				></results>
+			</transition>
 
 			<!--<div class="table-responsive results-table" v-if="results.length">-->
 				<!--<table class="table table-bordered">-->
@@ -95,30 +117,31 @@
 </template>
 
 <script>
-	import SystemInformation from './LandingPage/SystemInformation'
 	import Parser from './parser'
 	import Loader from './Loader'
 	import Results from './Results'
 	import { notify } from './helpers'
 
 	export default {
-		name: 'landing-page',
+		name: 'main-page',
 		components: { Loader, Results },
 
 		data () {
 			return {
 				minYear: 2004,
 				URL: this.$config('url'),
-				maxPages: 3,
+				maxPages: 10,
 				minRating: 4.3,
 				flows: 80,
 				results: [],
 				categories: [],
+				buttonLoading: true,
 				page: 1,
 				loading: false,
 				asc: null,
 				bookmarks: [],
-				isForm: false
+				isForm: false,
+				textBack: false
 			}
 		},
 
@@ -139,14 +162,21 @@
 			},
 
 			start() {
-				if (! this.isForm) {
-				    this.isForm = ! this.isForm;
-				    return;
+				if (this.buttonLoading) {
+					let parser = new Parser(this, this.$config('url'));
+					parser.getCategories();
+					Event.$on('finishCats', (res) => {
+						this.categories = res;
+						this.URL = `${this.$config('url')}${res[0].href}`;
+						this.isForm = ! this.isForm;
+					});
+					this.buttonLoading = ! this.buttonLoading;
+					return;
 				}
-				this.page = 1;
 				this.loading = true;
 				let parser = new Parser(this, this.URL, this.minRating, this.minYear, this.maxPages, this.flows);
 				parser.parse();
+				Event.$emit('start_progressbar');
 			},
 
 			tooltip(val) {
@@ -169,7 +199,7 @@
 
 			addToBookmarks(film) {
 				this.$db.insert(film, (err, newFilm) => {
-					notify('Добавлено', 'Добавлено в закладки');
+					notify(this, 'Добавлено в закладки');
 					this.updateBookmarks();
 				});
 			},
@@ -180,14 +210,14 @@
 
 			removeAll() {
 				this.$db.remove({ }, {}, (err, numRemoved) => {
-					notify('Удалено', `Удалено ${numRemoved} записи!`);
+					notify(this, `Удалено ${numRemoved} записи!`);
 					this.updateBookmarks();
 				});
 			},
 
 			removeBookmark(film) {
 				this.$db.remove({ _id: film._id }, {}, (err, numRemoved) => {
-					notify('Удалено', `Закладка удалена!`);
+					notify(this, `Закладка удалена!`);
 					this.updateBookmarks();
 				});
 			}
@@ -202,18 +232,11 @@
 
 				this.sortRate();
 
-				let myNotification = new Notification('Готово', {
-					body: 'Найдено '+this.results.length+' результатов!'
-				});
+				notify(this, `Найдено ${this.results.length} результатов!`);
+				this.page = 1;
 			});
 		},
 		mounted() {
-			let parser = new Parser(this, this.$config('url'));
-			parser.getCategories();
-			Event.$on('finishCats', (res) => {
-				this.categories = res;
-				this.URL = `${this.$config('url')}${res[0].href}`;
-			});
 			Event.$on('pageChanged', page => this.page = page)
 		}
 	}

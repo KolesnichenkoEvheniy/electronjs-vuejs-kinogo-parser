@@ -27,13 +27,16 @@ Vue.use(ElementUI);
 
 Vue.use(VueConfigManager, settings);
 
+import VueProgress from './components/vue-progress'
+Vue.use(VueProgress);
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },
   router,
   store,
   template: '<App/>'
-}).$mount('#app')
+}).$mount('#app');
 
 // setText('version', updater.version);
 // setText('build', updater.buildId);
