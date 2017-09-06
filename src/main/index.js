@@ -9,15 +9,18 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-updater.init({
+/*updater.init({
   autoDownload: false
-});
+});*/
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+// Just place this code at the entry point of your application: 
+
+updater.init('http://sdm.ua/parser/updates.json');
 
 function createWindow () {
   /**
@@ -39,8 +42,6 @@ function createWindow () {
     var template = [{
         label: "Парсер фильмов",
         submenu: [
-            { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-            { type: "separator" },
             { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
         ]}, {
         label: "Edit",

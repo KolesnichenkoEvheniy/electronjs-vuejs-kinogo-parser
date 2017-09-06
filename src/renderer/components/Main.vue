@@ -56,6 +56,8 @@
 				:url="$config('url')"
 			></results>
 
+			<updater></updater>
+
 			<!--<div class="table-responsive results-table" v-if="results.length">-->
 				<!--<table class="table table-bordered">-->
 					<!--<thead>-->
@@ -99,11 +101,12 @@
 	import Parser from './parser'
 	import Loader from './Loader'
 	import Results from './Results'
+	import Updater from './Updater'
 	import { notify } from './helpers'
 
 	export default {
 		name: 'landing-page',
-		components: { Loader, Results },
+		components: { Loader, Results, Updater },
 
 		data () {
 			return {

@@ -1,6 +1,6 @@
 {
   "name": "kinogo-parser",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Evgeniy <evgeniy.web@ukr.net>",
   "description": "An electron-vue project",
   "license": null,
@@ -16,14 +16,15 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "",
-    "publish": "publish publisher.json -p build"
+    "publish": "publish publisher.json -p build",
+    "publish:windows": "npm run publish win32-x64"
   },
   "updater": {
     "url": "http://sdm.ua/parser/updates.json"
   },
   "build": {
-    "productName": "Парсер фильмов",
-    "appId": "org.simulatedgreg.electron-vue",
+    "productName": "kinogo-parser",
+    "appId": "com.kinogo.parser",
     "directories": {
       "output": "build"
     },
@@ -50,7 +51,7 @@
     },
     "win": {
       "icon": "build/icons/icon.ico",
-      "target": "portable"
+      "target": "squirrel"
     },
     "linux": {
       "icon": "build/icons"
@@ -60,6 +61,7 @@
     "animate.css": "^3.5.2",
     "axios": "^0.16.1",
     "cheerio": "^0.20.0",
+    "electron-builder-squirrel-windows": "^19.27.3",
     "electron-simple-publisher": "^0.4.7",
     "electron-simple-updater": "^1.2.1",
     "element-ui": "^1.4.3",

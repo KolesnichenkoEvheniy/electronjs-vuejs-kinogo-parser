@@ -1,0 +1,14 @@
+{
+  "transport": {
+    "module": "ftp",
+    "host": "host",
+    "user": "user",
+    "password": "password",
+    "remotePath": "remote/path",
+    "remoteUrl": "http://remote/url/parser"
+  },
+  "fields": {
+	  "notes": "Новое обновление!"
+	},
+  "updatesJsonUrl": "http://remote/url/parser/updates.json"
+}

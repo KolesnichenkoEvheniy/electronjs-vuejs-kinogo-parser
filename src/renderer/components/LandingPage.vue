@@ -80,6 +80,8 @@
       <ul>
         <li v-for="film in bookmarks"><a href="#" @click.prevent="open(film.href)">{{ film.title }}</a><button class="btn btn-sm btn-warning" @click="removeBookmark(film)">-</button></li>
       </ul>
+
+      <updater></updater>
      
     </main>
   </div>
@@ -89,11 +91,12 @@
   import SystemInformation from './LandingPage/SystemInformation'
   import Parser from './parser'
   import Loader from './Loader'
+  import Updater from './Updater'
   import { notify } from './helpers'
 
   export default {
     name: 'landing-page',
-    components: { Loader },
+    components: { Loader, Updater },
 
     data () {
       return {
