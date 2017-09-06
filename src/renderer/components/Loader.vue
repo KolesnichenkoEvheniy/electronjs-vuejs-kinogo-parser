@@ -6,28 +6,68 @@
       <div class="cat__tail"></div>
       <div class="cat__head"></div>
     </div>
-    <el-progress :percentage="percentage"
-                 :status="status"
-    ></el-progress>
+    <progress-bar type="line" ref="line" :options="options"></progress-bar>
+    <!--<el-progress :percentage="percentage"-->
+                 <!--:status="status"-->
+    <!--&gt;</el-progress>-->
   </div>
 </template>
 
 <script>
   export default {
+  	data() {
+      return {
+		  start: 0,
+		  timeOnePage: 0,
+		  options: {
+			  color: '#f7ba2a',
+			  strokeWidth: 1,
+		  },
+		  start: true
+      }
+    },
     props: [
     	'currentPage',
         'totalPages'
     ],
+    watch: {
+		currentPage() {
+			Event.$emit('finish_speed');
+		}
+	},
     computed: {
       percentage() {
       	return 100 * +this.currentPage / +this.totalPages;
-      },
-      status() {
-        if (this.percentage > 85.5) {
-            return 'success';
-      	}
-        return 'primary';
       }
+    },
+    created() {
+
+    },
+    mounted() {
+      Event.$on('start_progressbar', () => {
+        this.$refs.line.set(0);
+        this.timeOnePage = 0;
+
+	  	Event.$emit('start_speed');
+      })
+		Event.$on('start_speed', () => {
+			this.start = new Date();
+			console.log('start');
+		})
+		Event.$on('finish_speed', () => {
+//			if (! this.timeOnePage) {
+				this.timeOnePage = new Date() - this.start;
+//				console.log('end');
+//
+//				console.log([this.totalPages - this.currentPage,
+//					this.totalPages, this.currentPage,
+//					this.timeOnePage, this.options.duration]);
+
+//			}
+			this.options.duration = 0;
+			this.options.duration = (this.totalPages - this.currentPage) * (this.timeOnePage / 2);
+			this.$refs.line.animate(1.0, this.options);
+		})
     }
   }
 </script>

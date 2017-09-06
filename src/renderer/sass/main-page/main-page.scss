@@ -1,5 +1,26 @@
+@import "~animate.css";
+
 .raleway {
 	font-family: 'Raleway', sans-serif;
+}
+
+.transition {
+	-webkit-transition: all 200ms ease;
+	-moz-transition: all 200ms ease;
+	-ms-transition: all 200ms ease;
+	-o-transition: all 200ms ease;
+	transition: all 200ms ease;
+}
+
+.fade-enter-active {
+	@extend .animated;
+	@extend .fadeIn;
+	animation-duration: .2s;
+}
+.fade-leave-active {
+	@extend .animated;
+	@extend .fadeOut;
+	animation-duration: .2s;
 }
 
 html {
@@ -24,13 +45,55 @@ div.mega-font {
 	font-size: 60px;
 	text-align: center;
 
-	span {
+	&.fidden {
+		overflow: hidden;
+		position: fixed;
+		z-index: 2;
+		width: 800px;
+
+		&:after {
+			z-index: -1;
+			display: block;
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			background: url(~@/assets/img/bg/23bg_04.jpg) no-repeat center -244px;
+			height: 157px;
+			width: 100vw;
+		}
+	}
+
+	span.sub-logo {
 		padding: 1px 10px 0 6px;
 		background: #20a0ff;
 		color: #fff;
 		border-radius: 2px;
 		display: inline-block;
 		line-height: 1.1;
+	}
+}
+
+.prev-button {
+	@extend .transition;
+
+	width: 46px;
+	display: flex;
+	position: fixed;
+	padding: 10px 15px 10px 13px;
+	left: 0;
+	top: 94px;
+	&:hover {
+		width: 140px;
+		> span {
+			width: 90px;
+		}
+	}
+
+	> span {
+		display: block;
+		width: 0;
+		overflow: hidden;
 	}
 }
 
@@ -47,6 +110,8 @@ div.mega-font {
 	padding: 60px 40px;
 	width: 100vw;
 	&:after, &:before {
+		@extend .transition;
+
 		display: block;
 		content: '';
 		position: fixed;
@@ -56,11 +121,6 @@ div.mega-font {
 		left: 0;
 		right: 0;
 		z-index: -1;
-		-webkit-transition: all 200ms ease;
-		-moz-transition: all 200ms ease;
-		-ms-transition: all 200ms ease;
-		-o-transition: all 200ms ease;
-		transition: all 200ms ease;
 	}
 	&:before {
 		background: url(~@/assets/img/bg/23bg_01.jpg) no-repeat center;

@@ -5184,6 +5184,12 @@ progress-stream@^1.1.0:
     speedometer "~0.1.2"
     through2 "~0.2.3"
 
+progressbar.js@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/progressbar.js/-/progressbar.js-1.0.1.tgz#f7fbfc195240fe0bb32f6f7bdb2e7ff400ea71f9"
+  dependencies:
+    shifty "^1.5.2"
+
 proto-list@~1.2.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/proto-list/-/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
@@ -5742,6 +5748,10 @@ shebang-regex@^1.0.0:
 shell-escape@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/shell-escape/-/shell-escape-0.2.0.tgz#68fd025eb0490b4f567a027f0bf22480b5f84133"
+
+shifty@^1.5.2:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/shifty/-/shifty-1.5.4.tgz#d4362fc914dd280ddf6e522be408b21203208346"
 
 sigmund@^1.0.1:
   version "1.0.1"
@@ -6514,6 +6524,12 @@ vue-loader@^12.2.1:
     vue-hot-reload-api "^2.1.0"
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.2.2"
+
+vue-progress@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/vue-progress/-/vue-progress-0.2.1.tgz#4911298b1a0eaa7b8232377bc3413725018075a4"
+  dependencies:
+    progressbar.js "^1.0.1"
 
 vue-router@^2.5.3:
   version "2.7.0"

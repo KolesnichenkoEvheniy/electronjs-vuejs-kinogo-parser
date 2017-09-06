@@ -35,7 +35,7 @@ export default class Parser
                         results.push({
                             title: $(this).find('h2 a').text(),
                             href: $(this).find('h2 a').attr('href'),
-                            rate: $(this).find('.current-rating').text(),
+                            rate: +$(this).find('.current-rating').text(),
                             image: $(this).find('.shortimg div img').attr('src')
                         });
                     }
