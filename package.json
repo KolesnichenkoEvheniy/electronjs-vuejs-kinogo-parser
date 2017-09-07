@@ -65,6 +65,7 @@
     "electron-simple-publisher": "^0.4.7",
     "electron-simple-updater": "^1.2.1",
     "element-ui": "^1.4.3",
+    "lodash": "^4.17.4",
     "nedb": "^1.8.0",
     "needle": "^1.0.0",
     "node-sass": "^4.5.3",

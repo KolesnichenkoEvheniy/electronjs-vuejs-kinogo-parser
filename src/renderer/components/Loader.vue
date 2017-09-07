@@ -49,11 +49,11 @@
         this.timeOnePage = 0;
 
 	  	Event.$emit('start_speed');
-      })
+      });
 		Event.$on('start_speed', () => {
 			this.start = new Date();
 			console.log('start');
-		})
+		});
 		Event.$on('finish_speed', () => {
 //			if (! this.timeOnePage) {
 				this.timeOnePage = new Date() - this.start;

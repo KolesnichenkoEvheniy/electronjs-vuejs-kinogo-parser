@@ -70,6 +70,11 @@
     },
 
     computed: {
+        /**
+         * Так как ссылка формируется неправильно,
+         * нужно немного закостылять
+         * @returns {string}
+         */
       installLinkFixed() {
           return this.installUrl.replace('-Setup-', ' Setup ');
       }

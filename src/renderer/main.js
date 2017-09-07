@@ -12,16 +12,19 @@ import store from './store'
 import router from './router'
 import VueConfigManager from 'vue-config-manager'
 import settings from './settings';
+import lodash from 'lodash';
+
 const { remote } = require('electron');
 const updater = remote.require('electron-simple-updater');
 
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-Vue.http = Vue.prototype.$http = axios
-Vue.config.productionTip = false
+if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
+Vue.http = Vue.prototype.$http = axios;
+Vue.config.productionTip = false;
 
 window.Event = new Vue();
+window._ = lodash;
 
-Vue.prototype.$db = db
+Vue.prototype.$db = db;
 
 Vue.use(ElementUI);
 

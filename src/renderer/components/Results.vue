@@ -8,6 +8,13 @@
 				display: 'flex',
 				'flex-flow': 'column wrap'
 			}">
+				<button class="plus-btn" @click="addToBookmarks(o)">
+					<i :class="{
+				    	'el-icon-star-on': filmIsInBookmarks(o),
+				    	'el-icon-star-off': !filmIsInBookmarks(o)
+					}"></i>
+				</button>
+
 				<img :src="`${url}${o.image}`" class="image image-spec" @click="open(o.href)">
 				<div class="el-card__info-wrapper">
 					<span v-text="o.title" class="text-span"></span>
@@ -31,21 +38,93 @@
 </template>
 
 <script>
+    import { notify } from './helpers'
+
 	export default {
 		props: [
 			'results',
 			'url'
 		],
 
+        data () {
+            return {
+                bookmarks: [],
+            }
+        },
+
 		methods: {
 			open (link) {
 				this.$electron.shell.openExternal(link)
 			},
+
+            addToBookmarks(film) {
+			    // remove if exists
+			    if(this.filmIsInBookmarks(film)) {
+					this.removeBookmark(film);
+                	return;
+                }
+
+                // delete otherwise
+                this.$db.insert(film, (err, newFilm) => {
+                    notify(this, 'Добавлено в закладки');
+                    this.updateBookmarks();
+                });
+            },
+
+            updateBookmarks() {
+                this.$db.find({}, (err, bookmarks) => this.bookmarks = bookmarks );
+            },
+
+            removeAll() {
+                this.$db.remove({ }, {}, (err, numRemoved) => {
+                    notify(this, `Удалено ${numRemoved} записи!`);
+                    this.updateBookmarks();
+                });
+            },
+
+            removeBookmark(film) {
+                this.$db.remove({ title: film.title }, {}, (err, numRemoved) => {
+                    notify(this, `Закладка удалена!`);
+                    this.updateBookmarks();
+                });
+            },
+
+			filmIsInBookmarks(film) {
+                let index = _.findIndex(this.bookmarks, f => f.title === film.title);
+			    return index > -1;
+			}
+		},
+
+		created() {
+            this.updateBookmarks();
 		}
 	}
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+	*, *:active {
+		outline: none
+	}
+	.el-card__body {
+		position: relative;
+		.plus-btn {
+			display: none;
+		}
+		&:hover .plus-btn{
+			display: block;
+		}
+	}
+	.plus-btn {
+		position: absolute;
+		border: none;
+		background: transparent;
+		font-size: 74px;
+		top: 10%;
+		color: #f59e02;
+		left: 50%;
+		margin-left: -38px;
+		text-shadow: 2px 2px 4px #666;
+	}
 	.text-center {
 		display: flex;
 		justify-content: center;

@@ -41,7 +41,7 @@
 										v-for="category in categories"
 										:key="category.href"
 										:label="category.title"
-										:value="`http://kinogo.club${category.href}`">
+										:value="`${$config('url')}${category.href}`">
 									</el-option>
 								</el-select>
 							</el-form-item>
@@ -199,42 +199,13 @@
 				this.results = [];
 				this.asc = null;
 			},
-
-			addToBookmarks(film) {
-				this.$db.insert(film, (err, newFilm) => {
-					notify(this, 'Добавлено в закладки');
-					this.updateBookmarks();
-				});
-			},
-
-			updateBookmarks() {
-				this.$db.find({}, (err, bookmarks) => this.bookmarks = bookmarks );
-			},
-
-			removeAll() {
-				this.$db.remove({ }, {}, (err, numRemoved) => {
-					notify(this, `Удалено ${numRemoved} записи!`);
-					this.updateBookmarks();
-				});
-			},
-
-			removeBookmark(film) {
-				this.$db.remove({ _id: film._id }, {}, (err, numRemoved) => {
-					notify(this, `Закладка удалена!`);
-					this.updateBookmarks();
-				});
-			}
 		},
 
 		created() {
-			this.updateBookmarks();
-
-			Event.$on('finish', (res) => {
+			Event.$on('finish', res => {
 				this.results = res;
 				this.loading = false;
-
 				this.sortRate();
-
 				notify(this, `Найдено ${this.results.length} результатов!`);
 				this.page = 1;
 			});
