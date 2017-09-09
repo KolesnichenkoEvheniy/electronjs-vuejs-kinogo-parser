@@ -1,6 +1,32 @@
 <template>
   <div class="test">
-    
+    <main>
+      <section class="container-check">
+        <div class="right box">
+          <a class="btn btn-primary" id="btn-update">Check for Updates</a>
+          <label>
+            <input type="checkbox" id="automatically"> Install automatically
+          </label>
+        </div>
+        <div class="left box">
+          <label>Current version: <span id="version"></span></label>
+          <label>Current build: <span id="build"></span></label>
+        </div>
+      </section>
+
+      <section class="container-install">
+        <p>New version <span id="new-version"></span> is available.</p>
+        <p>Description: <span id="description"></span></p>
+        <a class="btn btn-primary" id="btn-install">Install</a>
+      </section>
+    </main>
+
+    <section class="log">
+      <label>Log messages</label>
+      <div id="log-messages" class="messages">
+        <p>[info] Starting the application</p>
+      </div>
+    </section>
   </div>
 </template>
 

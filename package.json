@@ -1,6 +1,6 @@
 {
   "name": "kinogo-parser",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "Evgeniy <evgeniy.web@ukr.net>",
   "description": "An electron-vue project",
   "license": null,
@@ -17,7 +17,8 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "",
     "publish": "publish publisher.json -p build",
-    "publish:windows": "npm run publish win32-x64"
+    "publish:windows": "npm run publish win32-x64",
+    "publish:mac": "npm run publish"
   },
   "updater": {
     "url": "http://sdm.ua/parser/updates.json"
@@ -47,7 +48,9 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/icon.icns",
+      "category": "public.app-category.video",
+      "type": "development"
     },
     "win": {
       "icon": "build/icons/icon.ico",
@@ -64,6 +67,7 @@
     "electron-builder-squirrel-windows": "^19.27.3",
     "electron-simple-publisher": "^0.4.7",
     "electron-simple-updater": "^1.2.1",
+    "electron-updater": "^2.8.9",
     "element-ui": "^1.4.3",
     "lodash": "^4.17.4",
     "nedb": "^1.8.0",
