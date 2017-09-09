@@ -1,87 +1,45 @@
 <template>
-  <div class="test">
-    
+  <div class="version text-center">
+    Version {{ version }}
   </div>
 </template>
 
 <script>
   const { remote } = require('electron');
   const updater = remote.require('electron-simple-updater');
+  import { notify } from './helpers'
 
   export default {
     props: [],
 
     data() {
       return {
-          version: '0.1.1',
-          platform: null,
-          notes: 'Заметки...',
-          installUrl: 'http://test.com'
+        version: 'dev'
       };
     },
 
     mounted() {
       let that = this;
+      this.version = updater.version;
         
       updater.checkForUpdates();
-      updater.on('update-available', meta => {
-          that.notes = meta.notes;
-          that.installUrl = meta.install;
-          that.version = meta.version;
-          that.openModal();
+      updater.on('update-available', meta => updater.downloadUpdate());
+
+      updater.on('update-downloading', meta => {
+          notify(that, `Внимание! Загружается новая версия программы: ${meta.version}`, 'info');
       });
-
-      this.platform = updater.build;
+      updater.on('update-downloaded', meta => {
+          notify(that, `Сейчас программа будет перезапущена`, 'error');
+          setTimeout(() => updater.quitAndInstall(), 1500);
+      });
       
-    },
-
-    methods: {
-      openModal() {
-        let that = this;
-        const h = this.$createElement;
-        
-        this.$msgbox({
-          title: 'Вышла новая версия =)',
-          message: h('p', null, [
-            h('div', null, `Внимание! Вышла новая версия программы: ${this.version}`),
-            h('el-alert', { title: 'success alert', type:'success' }, that.notes)
-          ]),
-          confirmButtonText: 'Скачать обновление',
-          showCancelButton: false,
-          cancelButtonText: 'Отменить',
-          closeOnClickModal: false,
-          type: 'success'
-
-        }).then(() => {
-          
-          this.$message({
-            type: 'success',
-            message: 'Осталось совсем немного =)'
-          });
-
-          setTimeout(() => that.$electron.shell.openExternal(that.installLinkFixed), 1000);
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: 'Обновление до новых версий очень важно =('
-          });          
-        });
-      }
-    },
-
-    computed: {
-        /**
-         * Так как ссылка формируется неправильно,
-         * нужно немного закостылять
-         * @returns {string}
-         */
-      installLinkFixed() {
-          return this.installUrl.replace('-Setup-', ' Setup ');
-      }
     }
+
   }
 </script>
 
 <style scoped>
-  
+  .version {
+    color: #6f6c6c;
+  }
 </style>

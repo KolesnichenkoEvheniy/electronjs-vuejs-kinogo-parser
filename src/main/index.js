@@ -20,7 +20,10 @@ const winURL = process.env.NODE_ENV === 'development'
 
 // Just place this code at the entry point of your application: 
 
-updater.init('http://sdm.ua/parser/updates.json');
+updater.init({
+  checkUpdateOnStart: false,
+  autoDownload: false
+});
 
 function createWindow () {
   /**
@@ -81,8 +84,8 @@ app.on('activate', () => {
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
  */
 
-/*
-import { autoUpdater } from 'electron-updater'
+
+/*import { autoUpdater } from 'electron-updater'
 
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall()
