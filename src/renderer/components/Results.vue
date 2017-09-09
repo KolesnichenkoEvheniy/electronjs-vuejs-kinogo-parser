@@ -108,10 +108,19 @@
 	.el-card__body {
 		position: relative;
 		.plus-btn {
-			display: none;
+			transition: all 200ms ease;
+			opacity: 0;
 		}
-		&:hover .plus-btn{
-			display: block;
+		&:hover {
+			.plus-btn{
+				opacity: 1;
+			}
+			img {
+				filter: blur(8px);
+			}
+		}
+		img {
+			transition: all 200ms ease;
 		}
 	}
 	.plus-btn {
@@ -124,6 +133,7 @@
 		left: 50%;
 		margin-left: -38px;
 		text-shadow: 2px 2px 4px #666;
+		z-index: 1;
 	}
 	.text-center {
 		display: flex;
