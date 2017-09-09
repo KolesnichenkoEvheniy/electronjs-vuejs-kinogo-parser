@@ -1,0 +1,4 @@
+#!/bin/bash
+export CSC_LINK="file://cert.p12"
+npm run build:all
+npm run publish win32-x64 darwin-x64
