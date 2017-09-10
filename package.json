@@ -2,6 +2,9 @@
   "name": "kinogo-parser",
   "version": "1.0.7",
   "author": "Evgeniy <evgeniy.web@ukr.net>",
+  "contributors": [
+    "Peter Smaznoy <ithespv@gmail.com>"
+  ],
   "description": "An electron-vue project",
   "license": null,
   "main": "./dist/electron/main.js",
