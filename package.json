@@ -57,6 +57,9 @@
       "category": "public.app-category.video",
       "type": "development"
     },
+    "squirrelWindows": {
+      "loadingGif": "build/install.png"
+    },
     "win": {
       "icon": "build/icons/icon.ico",
       "target": "squirrel"
