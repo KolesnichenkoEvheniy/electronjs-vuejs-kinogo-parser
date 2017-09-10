@@ -24,6 +24,7 @@
     "postinstall": "",
     "publish": "publish publisher.json -p build",
     "publish:windows": "npm run publish win32-x64",
+    "publish:windows32": "npm run publish win32-ia32",
     "publish:mac": "npm run publish darwin-x64"
   },
   "updater": {
