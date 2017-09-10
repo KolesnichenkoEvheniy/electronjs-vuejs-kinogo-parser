@@ -11,6 +11,7 @@
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
     "build:windows": "node .electron-vue/build.js && electron-builder build --win",
+    "build:windows32": "node .electron-vue/build.js && electron-builder build --win --ia32",
     "build:mac": "node .electron-vue/build.js && electron-builder build --mac",
     "build:all": "node .electron-vue/build.js && electron-builder build --mac --win",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
