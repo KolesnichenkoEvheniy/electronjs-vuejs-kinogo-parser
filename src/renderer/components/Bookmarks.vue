@@ -64,15 +64,11 @@
 		width: 200px;
 	}
 	ul.el-menu.el-menu-vertical-demo {
-		position: fixed;
-		top: 0;
-		left: 0;
-		height: 100%;
 		padding-top: 20px;    
 		position: fixed;
 		top: 0;
 		left: 0;
-		height: 100%;
+		height: auto;
 		background: transparent;
 	    z-index: 9;
 	}

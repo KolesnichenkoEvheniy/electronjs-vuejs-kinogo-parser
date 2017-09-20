@@ -27,7 +27,7 @@
 						   @mouseleave.native="textBack = false"
 						   @click.native="clearTable()"
 				>
-					<span>Previous Page</span>
+					<span>Back</span>
 				</el-button>
 				Film <span class="sub-logo">Finder</span>
 			</div>
