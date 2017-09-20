@@ -73,6 +73,7 @@
 
             updateBookmarks() {
                 this.$db.find({}, (err, bookmarks) => this.bookmarks = bookmarks );
+                Event.$emit('updateBookmarks');
             },
 
             removeAll() {
@@ -97,6 +98,10 @@
 
 		created() {
             this.updateBookmarks();
+
+            Event.$on('updateBookmarksResults', () => {
+            	this.$db.find({}, (err, bookmarks) => this.bookmarks = bookmarks );
+            });
 		}
 	}
 </script>

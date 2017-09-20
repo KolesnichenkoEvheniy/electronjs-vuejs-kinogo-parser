@@ -7,6 +7,8 @@
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 		<link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,600,700,900" rel="stylesheet">
 
+		<bookmarks></bookmarks>
+
 		<main>
 			<transition name="fade">
 				<loader
@@ -58,7 +60,7 @@
 
 							<label>Passings pages</label>
 							<el-form-item>
-								<el-slider v-model="maxPages" :show-tooltip="true" :format-tooltip="tooltip"></el-slider>
+								<el-slider v-model="maxPages" :show-tooltip="true"></el-slider>
 							</el-form-item>
 						</div>
 
@@ -123,11 +125,12 @@
 	import Loader from './Loader'
 	import Results from './Results'
 	import Updater from './Updater'
+	import Bookmarks from './Bookmarks'
 	import { notify } from './helpers'
 
 	export default {
 		name: 'main-page',
-		components: { Loader, Results, Updater },
+		components: { Loader, Results, Updater, Bookmarks },
 
 		data () {
 			return {
