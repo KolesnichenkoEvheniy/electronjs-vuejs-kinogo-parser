@@ -32,7 +32,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 600,
     useContentSize: true,
-    width: 1000
+    width: 1000,
+    titleBarStyle: 'hidden'
   })
 
   mainWindow.loadURL(winURL)
@@ -42,24 +43,27 @@ function createWindow () {
   })
 
   // Create the Application's main menu
-    var template = [{
+  let template = [];
+  if (process.platform === 'darwin') {
+    template.push({
         label: "Парсер фильмов",
         submenu: [
-            { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
-        ]}, {
-        label: "Edit",
-        submenu: [
-            { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-            { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-            { type: "separator" },
-            { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-            { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-            { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-            { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-        ]}
-    ];
+            { label: "Выход", accelerator: "Command+Q", click: function() { app.quit(); }}
+        ]});
+  }
 
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  template.push({
+  label: "Правка",
+  submenu: [
+      { label: "Назад", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+      { label: "Вперед", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+      { type: "separator" },
+      { label: "Вырезать", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+      { label: "Скопировать", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+      { label: "Вставить", accelerator: "CmdOrCtrl+V", selector: "paste:" }
+  ]});
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 app.on('ready', createWindow)
