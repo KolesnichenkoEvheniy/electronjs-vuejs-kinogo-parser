@@ -54,7 +54,7 @@
 								<el-input v-model="minYear" placeholder="2000"></el-input>
 							</el-form-item>
 
-							<label>Min rate</label>
+							<label>Min rate (we recommend you to learn about rating values at your selected site)</label>
 							<el-form-item>
 								<el-input v-model="minRating"></el-input>
 							</el-form-item>
@@ -110,7 +110,7 @@
 				parseUrl: this.$config('url'),
 				domain: this.$config('url'),
 				maxPages: 10,
-				minRating: 4.3,
+				minRating: 80,
 				flows: 80,
 				results: [],
 				categories: [],
