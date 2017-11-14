@@ -1,5 +1,5 @@
 export default {
 	defaults: {
-		url: 'http://kinogo.cc'
+		url: 'http://kinogo.com.ua'
 	}
 }

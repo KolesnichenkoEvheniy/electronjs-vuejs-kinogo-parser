@@ -25,11 +25,11 @@ export default class Parser
                 let $ = cheerio.load(res.body);
 
                 $('.shortstory').each(function(i, elem) {
-                    if( 
+                    if(
                         $(this).find('h2 a').text().indexOf('сезон') === -1 && 
                         +$(this).find('.current-rating').text() >= that.minRating &&
-                        +$(this).find('> div').eq(1).find('a').eq(1).text() >= that.minYear &&
-                        $(this).find('> div').eq(1).text().indexOf('HDRip') !== -1
+                        +$(this).find('> div').eq(1).find('a').eq(1).text() >= that.minYear //&&
+                        // $(this).find('> div').eq(1).text().indexOf('HDRip') !== -1
                         ) {
 
                         results.push({

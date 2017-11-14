@@ -35,15 +35,16 @@
 				<div v-if="!results.length && !loading">
 					<el-form ref="form">
 						<div class="form-div" :style="{
-							'height': ! isForm ? '0' : '317px'
+							'height': ! isForm ? '0' : '387px'
 						}">
 							<el-form-item>
-								<el-select v-model="URL" placeholder="Категория">
+								<el-select v-model="parseUrl" placeholder="Категория">
+
 									<el-option
 										v-for="category in categories"
 										:key="category.href"
 										:label="category.title"
-										:value="`${$config('url')}${category.href}`">
+										:value="`${domain}${category.href}`">
 									</el-option>
 								</el-select>
 							</el-form-item>
@@ -53,7 +54,7 @@
 								<el-input v-model="minYear" placeholder="2000"></el-input>
 							</el-form-item>
 
-							<label>Min rate</label>
+							<label>Min rate (we recommend you to learn about rating values at your selected site)</label>
 							<el-form-item>
 								<el-input v-model="minRating"></el-input>
 							</el-form-item>
@@ -61,6 +62,11 @@
 							<label>Passings pages</label>
 							<el-form-item>
 								<el-slider v-model="maxPages" :show-tooltip="true"></el-slider>
+							</el-form-item>
+
+							<label>Kinogo URL</label>
+							<el-form-item>
+								<el-input v-model="domain" :placeholder="defaultUrl"></el-input>
 							</el-form-item>
 						</div>
 
@@ -82,40 +88,6 @@
 
 			<updater></updater>
 
-			<!--<div class="table-responsive results-table" v-if="results.length">-->
-				<!--<table class="table table-bordered">-->
-					<!--<thead>-->
-					<!--<th>Заголовок</th>-->
-					<!--<th @click="sortRate" class="pointer">Рейтинг <i :class="{-->
-                  <!--'fa': true,-->
-                  <!--'fa-sort-asc': asc && asc !== null,-->
-                  <!--'fa-sort-desc': ! asc && asc !== null-->
-                <!--}"-->
-																	 <!--aria-hidden="true"></i></th>-->
-					<!--<th>Ссылка</th>-->
-					<!--<th class="text-center">+</th>-->
-					<!--</thead>-->
-
-					<!--<tbody>-->
-					<!--<tr v-for="film in results">-->
-						<!--<td>{{ film.title }}</td>-->
-						<!--<td>{{ film.rate }}</td>-->
-						<!--<td><a href="#" @click.prevent="open(film.href)">Ссылка</a></td>-->
-						<!--<td class="text-center"><button class="btn btn-success" @click="addToBookmarks(film)">+</button></td>-->
-					<!--</tr>-->
-					<!--</tbody>-->
-				<!--</table>-->
-			<!--</div>-->
-
-			<!--<p v-if="results.length" class="text-center">-->
-				<!--<button class="btn btn-danger" @click="clearTable()">Очистить таблицу</button>-->
-			<!--</p>-->
-
-
-			<!--<ul>-->
-				<!--<li v-for="film in bookmarks"><a href="#" @click.prevent="open(film.href)">{{ film.title }}</a><button class="btn btn-sm btn-warning" @click="removeBookmark(film)">-</button></li>-->
-			<!--</ul>-->
-
 		</main>
 	</div>
 </template>
@@ -135,9 +107,10 @@
 		data () {
 			return {
 				minYear: 2004,
-				URL: this.$config('url'),
+				parseUrl: this.$config('url'),
+				domain: this.$config('url'),
 				maxPages: 10,
-				minRating: 4.3,
+				minRating: 80,
 				flows: 80,
 				results: [],
 				categories: [],
@@ -151,6 +124,14 @@
 			}
 		},
 
+		watch: {
+			domain(new1) {
+				if (this.categories.length) {
+					this.parseUrl = `${this.domain}${this.categories[0].href}`;
+				}
+			}
+		},
+
 		computed: {
 			category() {
 				return this.categories.filter((object) => {
@@ -160,6 +141,12 @@
 			button() {
 				return this.isForm ? 'Search' : 'Start';
 			},
+			defaultUrl() {
+				return this.$config('url');
+			},
+			URL() {
+				return this.domain + this.url;
+			}
 		},
 
 		methods: {
@@ -169,18 +156,23 @@
 
 			start() {
 				if (this.buttonLoading) {
-					let parser = new Parser(this, this.$config('url'));
+					let parser = new Parser(this, this.domain);
 					parser.getCategories();
 					Event.$on('finishCats', (res) => {
+						if (!res.length) {
+							alert('К сожалению, произошла ошибка.')
+							return;
+						}
 						this.categories = res;
-						this.URL = `${this.$config('url')}${res[0].href}`;
+						this.parseUrl = `${this.domain}${res[0].href}`;
+
 						this.isForm = ! this.isForm;
 					});
 					this.buttonLoading = ! this.buttonLoading;
 					return;
 				}
 				this.loading = true;
-				let parser = new Parser(this, this.URL, this.minRating, this.minYear, this.maxPages, this.flows);
+				let parser = new Parser(this, this.parseUrl, this.minRating, this.minYear, this.maxPages, this.flows);
 				parser.parse();
 				Event.$emit('start_progressbar');
 			},

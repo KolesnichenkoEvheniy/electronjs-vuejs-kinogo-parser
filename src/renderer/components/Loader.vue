@@ -15,61 +15,58 @@
 
 <script>
   export default {
-  	data() {
-      return {
-		  start: 0,
-		  timeOnePage: 0,
-		  options: {
-			  color: '#f7ba2a',
-			  strokeWidth: 1,
-		  },
-		  start: true
-      }
+    data() {
+        return {
+            start: 0,
+            timeOnePage: 0,
+            options: {
+                color: '#f7ba2a',
+                strokeWidth: 1,
+            },
+            start: true
+        }
     },
-    props: [
-    	'currentPage',
-        'totalPages'
-    ],
+    props: ['currentPage', 'totalPages'],
     watch: {
-		currentPage() {
-			Event.$emit('finish_speed');
-		}
-	},
+        currentPage() {
+            Event.$emit('finish_speed');
+        }
+    },
     computed: {
-      percentage() {
-      	return 100 * +this.currentPage / +this.totalPages;
-      }
+        percentage() {
+            return 100 * +this.currentPage / +this.totalPages;
+        }
     },
-    created() {
-
-    },
+    created() {},
     mounted() {
-      Event.$on('start_progressbar', () => {
-        this.$refs.line.set(0);
-        this.timeOnePage = 0;
-
-	  	Event.$emit('start_speed');
-      });
-		Event.$on('start_speed', () => {
-			this.start = new Date();
-			console.log('start');
-		});
-		Event.$on('finish_speed', () => {
-//			if (! this.timeOnePage) {
-				this.timeOnePage = new Date() - this.start;
-//				console.log('end');
-//
-//				console.log([this.totalPages - this.currentPage,
-//					this.totalPages, this.currentPage,
-//					this.timeOnePage, this.options.duration]);
-
-//			}
-			this.options.duration = 0;
-			this.options.duration = (this.totalPages - this.currentPage) * (this.timeOnePage / 2);
-			this.$refs.line.animate(1.0, this.options);
-		})
+        Event.$on('start_progressbar', () => {
+            if (this.$refs.line) {
+                this.$refs.line.set(0);
+                this.timeOnePaganimatee = 0;
+            }
+            Event.$emit('start_speed');
+        });
+        Event.$on('start_speed', () => {
+            this.start = new Date();
+            console.log('start');
+        });
+        Event.$on('finish_speed', () => {
+            //      if (! this.timeOnePage) {
+            this.timeOnePage = new Date() - this.start;
+            //        console.log('end');
+            //
+            //        console.log([this.totalPages - this.currentPage,
+            //          this.totalPages, this.currentPage,
+            //          this.timeOnePage, this.options.duration]);
+            //      }
+            if (this.$refs.line) {
+                this.options.duration = 0;
+                this.options.duration = (this.totalPages - this.currentPage) * (this.timeOnePage / 2);
+                this.$refs.line.animate(1.0, this.options);
+            }
+        })
     }
-  }
+}
 </script>
 
 <style scoped>

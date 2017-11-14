@@ -1,6 +1,6 @@
 <template>
 	<el-row>
-		<el-col :span="6" v-for="(o, index) in results" :key="index"
+		<el-col :span="6" v-for="(o, index) in resultsHandler" :key="index"
 				:offset="(index > 0 && index % 3 != 0) ? 2 : 0">
 			<el-card :body-style="{
 				padding: '0px',
@@ -51,6 +51,15 @@
                 bookmarks: [],
             }
         },
+
+		computed: {
+			resultsHandler() {
+				return this.results.map(value => {
+					value.rate = value.rate <= 5 ? value.rate : value.rate * 5 / 100;
+					return value;
+				});
+			}
+		},
 
 		methods: {
 			open (link) {
@@ -201,6 +210,8 @@
 	.image {
 		width: 100%;
 		display: block;
+		height: 297px;
+		object-fit: cover;
 	}
 
 	.image:hover {
